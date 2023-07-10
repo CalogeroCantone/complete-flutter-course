@@ -30,22 +30,6 @@ class RegexValidator implements StringValidator {
   }
 }
 
-class ValidatorInputFormatter implements TextInputFormatter {
-  ValidatorInputFormatter({required this.editingValidator});
-  final StringValidator editingValidator;
-
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    final bool oldValueValid = editingValidator.isValid(oldValue.text);
-    final bool newValueValid = editingValidator.isValid(newValue.text);
-    if (oldValueValid && !newValueValid) {
-      return oldValue;
-    }
-    return newValue;
-  }
-}
-
 class EmailEditingRegexValidator extends RegexValidator {
   EmailEditingRegexValidator() : super(regexSource: '^(|\\S)+\$');
 }
@@ -68,5 +52,23 @@ class MinLengthStringValidator extends StringValidator {
   @override
   bool isValid(String value) {
     return value.length >= minLength;
+  }
+}
+
+class ValidatorInputFormatter implements TextInputFormatter {
+  ValidatorInputFormatter({required this.editingValidator});
+  final StringValidator editingValidator;
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final bool oldValueValid = editingValidator.isValid(oldValue.text);
+    final bool newValueValid = editingValidator.isValid(newValue.text);
+
+    if (oldValueValid && !newValueValid) {
+      return oldValue;
+    }
+
+    return newValue;
   }
 }
